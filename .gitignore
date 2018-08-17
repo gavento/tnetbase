@@ -1,3 +1,6 @@
-/build
-/dist
-/tnetbase.egg-info
+/build/
+/dist/
+/tnetbase.egg-info/
+__pycache__/
+/logs/
+/tests/logs/
