@@ -21,13 +21,13 @@ class BaseNet:
         parser = argparse.ArgumentParser()
         parser.add_argument("--learning_rate", default=0.001, type=float, help="Base learning rate.")
         parser.add_argument("--threads", default=2, type=int, help="Maximum number of threads to use.")
-        parser.add_argument("--clip_gradient", default=10.0, type=float, help="Gradient clipping.")
+        parser.add_argument("--clip_gradient", default=1.0, type=float, help="Gradient clipping.")
         parser.add_argument("--name", default="", type=str, help="Any name comment.")
         parser.add_argument("--beta_2", default=0.99, type=float, help="Adam beta_2 parameter.")
         parser.add_argument("--logdir", default="logs", type=str, help="Logging subdirectory (default: 'logs/').")
-        parser.add_argument("--summary_every", default=32, type=int, help="Summary record period.")
+        parser.add_argument("--summary_every", default=1, type=int, help="Summary record period.")
         parser.add_argument("--keep_saves", default=2, type=int, help="Net saves to keep.")
-        parser.add_argument("--epochs", default=20, type=int, help="Training epochs.")
+        parser.add_argument("--epochs", default=100, type=int, help="Training epochs.")
         parser.add_argument("--seed", default=None, type=int, help="Random seed.")
         return parser
 
