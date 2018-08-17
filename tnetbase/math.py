@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 
 
 def argmax(iter, f):
@@ -12,4 +13,3 @@ def argmax(iter, f):
             best_v = v
             best_i = i
     return best_i
-

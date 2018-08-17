@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 import numpy as np
 import tensorflow as tf
 import networkx as nx
@@ -42,7 +43,6 @@ class BaseNet:
             inter_op_parallelism_threads=args.threads,                                                                    intra_op_parallelism_threads=args.threads)
         self.session = tf.Session(graph=self.graph, config=config)
         self.args = args
-
 
     def construct_pre(self):
         """
@@ -112,4 +112,3 @@ class BaseNet:
         with self.summary_writer.as_default():
             with tf.contrib.summary.record_summaries_every_n_global_steps(self.args.summary_every, self.global_step):
                 yield
-    
