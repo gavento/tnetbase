@@ -5,7 +5,7 @@ import tensorflow as tf
 import networkx as nx
 import random
 
-from . import basenet
+from . import basenet, math
 
 
 class GCNet(basenet.BaseNet):
@@ -16,7 +16,6 @@ class GCNet(basenet.BaseNet):
             v_in,
             v_out,
         ], axis=1)
-        print("EG: ", cn)
         return tf.layers.dense(cn, dim, activation=tf.nn.relu)
 
     def vertex_gadget(self, g_layer, v_layer, v_sum, v_mean, v_max, dim=None):
@@ -26,18 +25,16 @@ class GCNet(basenet.BaseNet):
             v_sum,
             v_mean,
             v_max,
-            ], axis=1)
-        print("VG: ", cn)
+        ], axis=1)
         return tf.layers.dense(cn, dim, activation=tf.nn.relu)
 
     def graph_gadget(self, g_layer, v_layer, dim=None):
         cn = tf.concat([
-            g_layer, 
+            g_layer,
             tf.reduce_sum(v_layer, axis=0, keepdims=True),
             tf.reduce_max(v_layer, axis=0, keepdims=True),
             tf.reduce_mean(v_layer, axis=0, keepdims=True),
-            ], axis=1)
-        print("GG: ", cn)
+        ], axis=1)
         return tf.layers.dense(cn, dim, activation=tf.nn.relu)
 
     def construct(self, v_dims=[2, 4, 8], e_dims=[2, 4, 8], g_dims=[4, 8, 16]):
@@ -47,7 +44,9 @@ class GCNet(basenet.BaseNet):
 
             # Input graph order and size
             self.g_n = tf.placeholder(tf.int32, [], name="g_n")
+            self.g_n_f = tf.cast(self.g_n, tf.float32)
             self.g_m = tf.placeholder(tf.int32, [], name="g_m")
+            self.g_m_f = tf.cast(self.g_m, tf.float32)
 
             # Input graph edge sources and destinations
             self.edge_srcs = tf.placeholder(tf.int32, [None], name="edge_srcs")
@@ -87,9 +86,11 @@ class GCNet(basenet.BaseNet):
             edges = list(G.edges())
         else:
             raise TypeError("Graph or Digraph expected, got {}".format(type(G)))
+        idx = math.index(G.nodes())
+        edges_ord = [(idx[u], idx[v]) for (u, v) in edges]
         return {
             self.g_n: G.order(),
             self.g_m: len(edges),
-            self.edge_srcs: [u for (u, v) in edges],
-            self.edge_dsts: [v for (u, v) in edges],
+            self.edge_srcs: [u for (u, v) in edges_ord],
+            self.edge_dsts: [v for (u, v) in edges_ord],
         }

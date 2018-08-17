@@ -13,3 +13,10 @@ def argmax(iter, f):
             best_v = v
             best_i = i
     return best_i
+
+
+def index(iterable):
+    idx = {}
+    for i, it in enumerate(iterable):
+        idx[it] = i
+    return idx

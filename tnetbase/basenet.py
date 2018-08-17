@@ -9,6 +9,8 @@ import contextlib
 import datetime
 import sys
 
+from .io import Tee
+
 
 class BaseNet:
 
@@ -49,11 +51,10 @@ class BaseNet:
         Creates directory and opens the logfile.
         """
         os.makedirs(self.logdir, exist_ok=True)
-        self.log = open(os.path.join(self.logdir, "log.txt"), "wt")
-        hello = "Running {} in {}\nCmdline: {}\nArgs: {}\n".format(
-            self.bname, self.logdir, sys.argv, self.args)
-        self.log.write(hello + "\n")
-        print(hello)
+        self.tee = Tee(os.path.join(self.logdir, "log.txt"))
+        with self.tee:
+            print("Running {} in {}\nCmdline: {}\nArgs: {}\n".format(
+                self.bname, self.logdir, sys.argv, self.args))
 
         with self.session.graph.as_default():
             # Training variables and global step
